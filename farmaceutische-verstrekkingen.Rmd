@@ -1,0 +1,47 @@
+---
+title: "Farmaceutische verstrekkingen"
+output: html_document
+---
+
+```{r load libraries}
+library(timevis)
+library(readxl)
+library(DiagrammeR)
+```
+
+```{r load data}
+nomen_lijst <- read_excel("data/liste-specialites-20180901.xlsx",
+                          sheet = "90 % FACTURATION")
+data <- data.frame(
+  content = nomen_lijst$`Werkzaam bestanddeel`,
+  start = as.Date(nomen_lijst$`Date Adm`,"%Y%m%d"),
+  year = format(as.Date(nomen_lijst$`Date Adm`,"%Y%m%d"),"%Y")
+)
+d.uni.dates <- unique(data[c("content", "start")])
+d.uni.names <- as.data.frame(unique(data$content))
+names(d.uni.names) <- c('stofnaam')
+```
+
+## Alle medicamenten
+
+```{r line point plot all farmas}
+library(ggplot2)
+ggplot(data, aes(x=start, y=content, color= as.factor(content)), show.legend=F) +
+  geom_line(show.legend=F) +
+  geom_point(show.legend=F) +
+  xlim(c(min(data$start), max(data$start)+1*365))
+
+```
+
+Plot of new admission of pharmaceuticals per year
+```{r}
+# todo plot with count of earliest date of availability
+ggplot(data) +
+  geom_bar(aes(x = year), # fill = as.factor(year)),
+           position = "dodge", stat = "count")
+  ```
+
+### Totaal van nieuwe toegelaten geneesmiddelen sinds CTG
+```{r}
+prod.new <- subset(data, year > 2002, select=c(content,start,year))
+```

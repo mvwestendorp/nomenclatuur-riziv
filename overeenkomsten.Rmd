@@ -1,11 +1,15 @@
 ---
 title: "Nomenclatuur"
-output: html_document
-params:
-  output_dir: "../docs"
+output: 
+  html_document:
+    code_folding: hide
 ---
 
-```{r Libraries}
+```{r global-options, include=FALSE}
+knitr::opts_chunk$set(warning=FALSE, message=FALSE)
+```
+
+```{r Load libraries}
 library(ggplot2)
 library(timevis)
 library(readxl)
@@ -13,12 +17,19 @@ library(DiagrammeR)
 library(dplyr)
 ```
 
-## Geheime overeenkomsten
+```{r bestandnaam, echo=F}
+file_name <- 'data/liste-specialites-20200901.xlsx'
+file_date <- 'september 2020'
+```
 
-Data over geheime overeenkomst
+De naam van het bestand dat uitgelezen wordt is `r file_name` van `r file_date`.
 
-```{r}
-file_name <- 'liste-specialites-20200901.xlsx'
+## Aantal overeenkomsten
+
+
+
+De code voor het inlezen van het Excel bestand.
+```{r inlezen overeenkomsten data}
 t_list <- read_excel(file_name, 'REFUND CONDITION')
 speciality_list <- read_excel(file_name, 'SPECIALITY')
 m_list <- merge(t_list, speciality_list, by.x = 'SRCH_S_COD', by.y = 'S_COD')
@@ -32,8 +43,8 @@ names(deals) <- c('id', 'name', 'date', 'year')
 deals.distinct <- distinct(deals, name, date, year)
 ```
 
-Plot van geheime overeenkomsten die gesloten zijn met de fabrikanten van farmaceutische verstrekkingen.
-```{r}
+
+```{r plot overenkomsten per jaar}
 deals.distinct %>%
   filter(year > 2000) %>%
   ggplot() +
@@ -46,12 +57,12 @@ deals.distinct %>%
   theme_light()
 ```
 
-Save image to file
-```{r}
+```{r opslaan van figuur, echo=F}
 # ggsave(file="geheime-overeenkomsten.svg", plot=image, width=10, height=8)
 ```
 
-```{r}
+## Overeenkomsten met prijzen 
+```{r Inlezen prijs data}
 nomen.data.price <- read_excel(file_name, sheet = "PRICES")
 nomen.price <- data.frame(id = nomen.data.price$SPBH_S_COD, price = nomen.data.price$SPB_PUBLIC)
 
@@ -59,7 +70,7 @@ nomen.price.ack <- merge(deals, nomen.price, by = 'id')
 nomen.price.ack$year <- format(as.Date(nomen.price.ack$date, "%Y%m%d"), "%Y")
 ```
 
-```{r}
+```{r Plot van prijzen}
 ggplot(nomen.price.ack) +
   geom_boxplot(aes(x = year, y = price)) +
   ggtitle("Geheime overeenkomsten tussen RIZIV en farmaceutische industrie") +

@@ -1,0 +1,13 @@
+---
+title: "Nomenclatuur index pagina"
+author: Mathijs van Westendorp
+output: html_document
+---
+
+Deze pagina is een aanvulling bij het Handboek Nomenclatuur waarin een aantal extra afbeeldingen gepresenteerd worden op basis van de door het RIZIV beschikbaar gestelde [lijst van vergoedbare farmaceutische verstrekkingen](https://www.inami.fgov.be/nl/themas/kost-terugbetaling/door-ziekenfonds/geneesmiddel-gezondheidsproduct/terugbetalen/specialiteiten/Paginas/specialiteiten-referentielijst-referentiebestand.aspx).
+
+Er is een up to date versie gelijkend op die is opgenomen in het handboek evenals wat extra figuren over de [Overeenkomsten](overeenkomsten.html) die het RIZIV sluit met farmaceutische bedrijven.
+
+Onder [Farmaceutische verstrekkingen]() zijn figuren te vinden die meer informatie geven over alle verstrekkingen en dus niet uitsluitend die verstrekkingen waar een overeenkomst over is gesloten.
+
+De code voor deze site en de figuren die daarop te vinden zijn is te raadplegen op [GitHub](https://github.com/mvwestendorp/nomenclatuur-riziv)

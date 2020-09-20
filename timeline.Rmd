@@ -1,0 +1,24 @@
+---
+title: "Tijdspad"
+author: "Mathijs van Westendorp"
+output: html_document
+---
+
+```{r data for timeline}
+nomen_lijst <- read_excel("data/liste-specialites-20180901.xlsx",
+                          sheet = "90 % FACTURATION")
+data <- data.frame(
+  content = nomen_lijst$`Werkzaam bestanddeel`,
+  start = as.Date(nomen_lijst$`Date Adm`,"%Y%m%d"),
+  year = format(as.Date(nomen_lijst$`Date Adm`,"%Y%m%d"),"%Y")
+)
+d.uni.dates <- unique(data[c("content", "start")])
+d.uni.names <- as.data.frame(unique(data$content))
+names(d.uni.names) <- c('stofnaam')
+
+data.sub <- data[sample(nrow(data), 50), ]
+
+t <- timevis(data.sub)
+# htmlwidgets::saveWidget(t, "TimeLine.html", selfcontained = F)
+t
+```

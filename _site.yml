@@ -7,6 +7,11 @@ navbar:
       href: index.html
     - text: "Overeenkomsten"
       href: overeenkomsten.html
+    - text: "Farmaceutische verstrekkingen"
+      href: farmaceutische-verstrekkingen.html
+    - text: "Farmaceutische Tijdspad"
+      href: timeline.html
+include: ["index.Rmd", "overeenkomsten.Rmd"]
 output:
   html_document:
     theme: cosmo
