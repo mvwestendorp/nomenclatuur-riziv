@@ -1,0 +1,12 @@
+name: "nomenclatuur"
+output_dir: "docs"
+navbar:
+  title: "Nomenclatuur"
+  left:
+    - text: "Home"
+      href: index.html
+    - text: "Overeenkomsten"
+      href: overeenkomsten.html
+output:
+  html_document:
+    theme: cosmo
