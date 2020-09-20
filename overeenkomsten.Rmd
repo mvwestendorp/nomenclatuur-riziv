@@ -1,0 +1,73 @@
+---
+title: "Nomenclatuur"
+output: html_document
+knit: (function(input_file, encoding) {
+  out_dir <- 'docs';
+  rmarkdown::render(input_file,
+ encoding=encoding,
+ output_file=file.path(dirname(input_file), out_dir, 'index.html'))})
+
+---
+
+```{r Libraries}
+library(timevis)
+library(readxl)
+library(DiagrammeR)
+library(dplyr)
+```
+
+## Geheime overeenkomsten
+
+Data over geheime overeenkomst
+
+```{r}
+file_name <- 'liste-specialites-20200901.xlsx'
+t_list <- read_excel(file_name, 'REFUND CONDITION')
+speciality_list <- read_excel(file_name, 'SPECIALITY')
+m_list <- merge(t_list, speciality_list, by.x = 'SRCH_S_COD', by.y = 'S_COD')
+m_list$S_BEG_ADMIS_DAT <- as.Date(m_list$S_BEG_ADMIS_DAT, format = "%Y%m%d")
+
+deals <- m_list %>%
+  filter(SRC_CODE_T == 1) %>%
+  select(SRCH_S_COD, S_NAM, S_BEG_ADMIS_DAT)
+deals$year <- strtoi(format(deals$S_BEG_ADMIS_DAT, "%Y"))
+names(deals) <- c('id', 'name', 'date', 'year')
+deals.distinct <- distinct(deals, name, date, year)
+```
+
+Plot van geheime overeenkomsten die gesloten zijn met de fabrikanten van farmaceutische verstrekkingen.
+```{r}
+deals.distinct %>%
+  filter(year > 2000) %>%
+  ggplot() +
+  geom_bar(aes(x = year),
+           position = "dodge", stat = "count", show.legend = F) +
+  ggtitle("Overeenkomsten tussen RIZIV en farmaceutische industrie") +
+  xlab("Jaar") +
+  ylab("Aantal overeenkomsten") +
+  geom_text(stat = 'count', aes(x = year, label = ..count..), size = 3, position = position_stack(vjust = 0.5)) +
+  theme_light()
+```
+
+Save image to file
+```{r}
+# ggsave(file="geheime-overeenkomsten.svg", plot=image, width=10, height=8)
+```
+
+```{r}
+nomen.data.price <- read_excel(file_name, sheet = "PRICES")
+nomen.price <- data.frame(id = nomen.data.price$SPBH_S_COD, price = nomen.data.price$SPB_PUBLIC)
+
+nomen.price.ack <- merge(deals, nomen.price, by = 'id')
+nomen.price.ack$year <- format(as.Date(nomen.price.ack$date, "%Y%m%d"), "%Y")
+```
+
+```{r}
+ggplot(nomen.price.ack) +
+  geom_boxplot(aes(x = year, y = price)) +
+  ggtitle("Geheime overeenkomsten tussen RIZIV en farmaceutische industrie") +
+  xlab("Jaar") +
+  ylab("Prijs van producten") +
+  coord_trans(y = "log10") +
+  theme_linedraw()
+```
